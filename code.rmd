@@ -2,9 +2,11 @@ library(tidyr)
 library(dplyr)
 
 Loading refine into R
+
 refine <- read.csv("refine_original.csv", header = TRUE)
 
 Clean up brand names
+
 data <- refine %>%
     arrange(company) %>%
     mutate_each(funs(tolower),matches("company"))
@@ -15,13 +17,16 @@ data[17:20,1] = "unilever"
 data[21:25,1] = "van houten"
 
 Separate product code and number
+
 colnames(data)[2] <- "product_code-number"
 data <- separate(data, "product_code-number", c("product_code", "product_number"), sep = "-")
 
 Full address for geocoding
+
 data <- unite_(data, "full_address", c("address","city","country"), sep = ", ", remove = FALSE)
 
 Create dummy variables for company and product category
+
 data$comp_philips <- 0
 
 data[data$company == "philips", "comp_philips"] = 1 
@@ -44,4 +49,5 @@ data[data$product_code == "p", "product_smartphone"] = 1
 
 
 Create clean CSV file
+
 write.csv(data, "refine_clean.csv")
