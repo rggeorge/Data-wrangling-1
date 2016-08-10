@@ -1,31 +1,31 @@
-library(tidyr)
+library(tidyr)<br>
 library(dplyr)
 
-Loading refine into R
+<h2>Loading refine into R</h2>
 
 refine <- read.csv("refine_original.csv", header = TRUE)
 
-Clean up brand names
+<h2>Clean up brand names</h2>
 
-data <- refine %>%
-    arrange(company) %>%
-    mutate_each(funs(tolower),matches("company"))
-table(data$company)
-data[1:7,1] = "akzo"
-data[8:16,1] = "philips"
-data[17:20,1] = "unilever"
-data[21:25,1] = "van houten"
+data <- refine %>% <br>
+    arrange(company) %>% <br>
+    mutate_each(funs(tolower),matches("company")) <br>
+table(data$company) <br>
+data[1:7,1] = "akzo" <br>
+data[8:16,1] = "philips" <br>
+data[17:20,1] = "unilever" <br>
+data[21:25,1] = "van houten" <br>
 
-Separate product code and number
+<h2>Separate product code and number</h2>
 
-colnames(data)[2] <- "product_code-number"
+colnames(data)[2] <- "product_code-number" <br>
 data <- separate(data, "product_code-number", c("product_code", "product_number"), sep = "-")
 
-Full address for geocoding
+<h2>Full address for geocoding</h2>
 
 data <- unite_(data, "full_address", c("address","city","country"), sep = ", ", remove = FALSE)
 
-Create dummy variables for company and product category
+<h2>Create dummy variables for company and product category</h2>
 
 data$comp_philips <- 0
 
@@ -48,6 +48,6 @@ data$product_smartphone = 0
 data[data$product_code == "p", "product_smartphone"] = 1 
 
 
-Create clean CSV file
+<h2>Create clean CSV file</h2>
 
 write.csv(data, "refine_clean.csv")
